@@ -109,4 +109,10 @@ public class Cliente {
         this.endereco = endereco;
     }
 
+    @Override
+    public String toString() {
+        return "Cliente [id=" + id + ", cpf=" + cpf + ", nome=" + nome + ", telefone=" + telefone + ", email=" + email
+                + ", rendaSalarial=" + rendaSalarial + ", senha=" + senha + ", endereco=" + endereco + "]";
+    }
+
 }
