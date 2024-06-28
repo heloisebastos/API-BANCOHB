@@ -1,9 +1,8 @@
 package br.com.bancohb.produtosbancariospf.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import br.com.bancohb.produtosbancariospf.exception.ClienteException;
 import br.com.bancohb.produtosbancariospf.model.entity.Cliente;
 import br.com.bancohb.produtosbancariospf.repository.ClienteRepository;
 
@@ -12,18 +11,23 @@ import java.util.List;
 @Service
 public class ClienteService {
 
-    private final ClienteRepository repository;
+    private final ClienteRepository clienteRepository;
 
     public ClienteService(ClienteRepository repository) {
-        this.repository = repository;
+        this.clienteRepository = repository;
     }
 
     public List<Cliente> getAll() {
-        return repository.findAll();
+        return clienteRepository.findAll();
     }
 
     public Cliente create(Cliente clienteBody) {
-        return repository.save(clienteBody);
+        boolean cadastradoExiste = clienteRepository.existsBycpf(clienteBody.getCpf());
+
+        if (cadastradoExiste) {
+            throw new ClienteException.CadastroDuplicadoException();
+        }
+        return clienteRepository.save(clienteBody);
     }
 
 }

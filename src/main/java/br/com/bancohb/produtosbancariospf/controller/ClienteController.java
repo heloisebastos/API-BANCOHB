@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import br.com.bancohb.produtosbancariospf.exception.ClienteException;
 import br.com.bancohb.produtosbancariospf.model.entity.Cliente;
 import br.com.bancohb.produtosbancariospf.repository.ClienteRepository;
 import br.com.bancohb.produtosbancariospf.service.ClienteService;
@@ -49,9 +50,8 @@ public class ClienteController {
             Cliente cliente = clienteService.create(clienteBody);
             return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
 
-        } catch (Exception e) {
-            log.error("Erro ao criar cadastro do cliente ");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ClienteException.CadastroDuplicadoException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
         }
 
     }

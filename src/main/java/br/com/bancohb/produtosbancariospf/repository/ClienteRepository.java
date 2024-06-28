@@ -8,4 +8,6 @@ import br.com.bancohb.produtosbancariospf.model.entity.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
 
+    boolean existsBycpf(String cpf);
+
 }
