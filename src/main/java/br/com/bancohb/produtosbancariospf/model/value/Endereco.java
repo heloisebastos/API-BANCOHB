@@ -11,15 +11,21 @@ public class Endereco {
     private String bairro;
     private String complemento;
     private String cidade;
+    private String uf;
     private int cep;
 
-    public Endereco(String rua, int quadra, int numero, String bairro, String complemento, String cidade, int cep) {
+    protected Endereco() {
+    }
+
+    public Endereco(String rua, int quadra, int numero, String bairro, String complemento, String cidade, String uf,
+            int cep) {
         this.rua = rua;
         this.quadra = quadra;
         this.numero = numero;
         this.bairro = bairro;
         this.complemento = complemento;
         this.cidade = cidade;
+        this.uf = uf;
         this.cep = cep;
     }
 
@@ -79,10 +85,18 @@ public class Endereco {
         this.cidade = cidade;
     }
 
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
     @Override
     public String toString() {
         return "Endereco [rua=" + rua + ", quadra=" + quadra + ", numero=" + numero + ", bairro=" + bairro
-                + ", complemento=" + complemento + ", cidade=" + cidade + ", cep=" + cep + "]";
+                + ", complemento=" + complemento + ", cidade=" + cidade + ", uf=" + uf + ", cep=" + cep + "]";
     }
 
 }

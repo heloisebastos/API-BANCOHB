@@ -8,13 +8,25 @@ import br.com.bancohb.produtosbancariospf.model.value.Endereco;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cliente", uniqueConstraints = @UniqueConstraint(columnNames = { "cpf" }))
+@Table(name = "cliente")
 public class Cliente {
     @Id
     @UuidGenerator
     private UUID id;
 
+    private String cpf;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     private String nome;
+
+    private String telefone;
 
     private String email;
 
@@ -26,6 +38,20 @@ public class Cliente {
     // cujos campos serão mapeados diretamente na tabela cliente.
     @Embedded
     private Endereco endereco;
+
+    protected Cliente() {
+    }
+
+    public Cliente(String cpf, String nome, String telefone, String email, double rendaSalarial, String senha,
+            Endereco endereco) {
+        this.cpf = cpf;
+        this.nome = nome;
+        this.telefone = telefone;
+        this.email = email;
+        this.rendaSalarial = rendaSalarial;
+        this.senha = senha;
+        this.endereco = endereco;
+    }
 
     public UUID getId() {
         return id;
@@ -41,6 +67,14 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getEmail() {
