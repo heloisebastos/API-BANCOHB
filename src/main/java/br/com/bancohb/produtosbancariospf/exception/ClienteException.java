@@ -6,8 +6,8 @@ public class ClienteException extends RuntimeException {
     }
 
     public static class CadastroNaoEncontradoException extends ClienteException {
-        public CadastroNaoEncontradoException() {
-            super("Cadastro de cliente não encontrado");
+        public CadastroNaoEncontradoException(String messsage) {
+            super(messsage);
         }
     }
 

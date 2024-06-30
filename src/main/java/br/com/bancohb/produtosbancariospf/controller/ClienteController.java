@@ -1,6 +1,7 @@
 package br.com.bancohb.produtosbancariospf.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -34,17 +35,14 @@ public class ClienteController {
         try {
             List<Cliente> cliente = clienteRepository.findAll();
             return ResponseEntity.ok(cliente);
-
         } catch (Exception e) {
-
             log.error("Erro ao buscar os clientes");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
 
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping("/cadastrar-cliente")
     public ResponseEntity<Object> create(@RequestBody Cliente clienteBody) {
         try {
             Cliente cliente = clienteService.create(clienteBody);
@@ -56,10 +54,29 @@ public class ClienteController {
 
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}/deletar-cadastro")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         clienteRepository.deleteById(id);
+    }
+
+    @PatchMapping("/{id}/atualizar-cadastro")
+    public ResponseEntity<Object> patch(@PathVariable UUID id, @RequestBody Map<String, String> requestBody)
+            throws IllegalAccessException {
+
+        try {
+            Cliente clienteAtualizado = clienteService.patch(id, requestBody);
+            return ResponseEntity.ok(clienteAtualizado);
+        } catch (ClienteException.CadastroNaoEncontradoException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalAccessException e) {
+            log.error("Erro de acesso ilegal ao atualizar cadastro: ", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception exception) {
+            log.error("Erro ao atualizar o cadastro", exception);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }
