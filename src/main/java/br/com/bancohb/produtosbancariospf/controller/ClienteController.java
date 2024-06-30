@@ -45,7 +45,7 @@ public class ClienteController {
     @PostMapping("/cadastrar-cliente")
     public ResponseEntity<Object> create(@RequestBody Cliente clienteBody) {
         try {
-            Cliente cliente = clienteService.create(clienteBody);
+            Cliente cliente = clienteService.cadastrarCliente(clienteBody);
             return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
 
         } catch (ClienteException.CadastroDuplicadoException exception) {
@@ -63,7 +63,6 @@ public class ClienteController {
     @PatchMapping("/{id}/atualizar-cadastro")
     public ResponseEntity<Object> patch(@PathVariable UUID id, @RequestBody Map<String, String> requestBody)
             throws IllegalAccessException {
-
         try {
             Cliente clienteAtualizado = clienteService.patch(id, requestBody);
             return ResponseEntity.ok(clienteAtualizado);

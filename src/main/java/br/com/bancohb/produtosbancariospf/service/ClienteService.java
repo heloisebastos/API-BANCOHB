@@ -7,6 +7,7 @@ import br.com.bancohb.produtosbancariospf.model.entity.Cliente;
 import br.com.bancohb.produtosbancariospf.repository.ClienteRepository;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Cliente create(Cliente clienteBody) {
+    public Cliente cadastrarCliente(Cliente clienteBody) {
         boolean cadastradoExiste = clienteRepository.existsBycpf(clienteBody.getCpf());
 
         if (cadastradoExiste) {
@@ -46,7 +47,7 @@ public class ClienteService {
             String nomeCampo = campo.getName();
 
             if (requestBody.containsKey(nomeCampo)) {
-                // log.info(nomeCampo);
+                cliente.setDataAtualizacao(LocalDateTime.now());
                 String atualizacaoRequest = requestBody.get(nomeCampo);
                 campo.set(cliente, atualizacaoRequest);
             }

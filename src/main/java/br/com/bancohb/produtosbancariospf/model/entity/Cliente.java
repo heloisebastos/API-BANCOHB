@@ -1,11 +1,17 @@
 package br.com.bancohb.produtosbancariospf.model.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.bancohb.produtosbancariospf.model.value.Endereco;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "cliente")
@@ -14,16 +20,11 @@ public class Cliente {
     @UuidGenerator
     private UUID id;
 
-    private String cpf;
+    @NotNull(message = "CPF não pode ser vazio")
+    @Column(updatable = false)
+    private Long cpf;
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
+    @Column(updatable = false)
     private String nome;
 
     private String telefone;
@@ -34,6 +35,18 @@ public class Cliente {
 
     private String senha;
 
+    private boolean logado = false;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime dataCriacao;
+
+    @UpdateTimestamp
+    @Column(insertable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime dataAtualizacao;
+
     // Indica que o campo endereço é uma instância de uma classe embutida, Endereço,
     // cujos campos serão mapeados diretamente na tabela cliente.
     @Embedded
@@ -42,8 +55,8 @@ public class Cliente {
     protected Cliente() {
     }
 
-    public Cliente(String cpf, String nome, String telefone, String email, double rendaSalarial, String senha,
-            Endereco endereco) {
+    public Cliente(Long cpf, String nome, String telefone, String email, double rendaSalarial, String senha,
+            Endereco endereco, boolean status) {
         this.cpf = cpf;
         this.nome = nome;
         this.telefone = telefone;
@@ -51,6 +64,7 @@ public class Cliente {
         this.rendaSalarial = rendaSalarial;
         this.senha = senha;
         this.endereco = endereco;
+        this.logado = status;
     }
 
     public UUID getId() {
@@ -107,6 +121,30 @@ public class Cliente {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public Long getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(Long cpf) {
+        this.cpf = cpf;
+    }
+
+    public boolean isLogado() {
+        return logado;
+    }
+
+    public void setLogado(boolean logado) {
+        this.logado = logado;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     @Override
