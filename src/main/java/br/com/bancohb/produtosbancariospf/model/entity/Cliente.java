@@ -35,7 +35,7 @@ public class Cliente {
 
     private String senha;
 
-    private boolean logado = false;
+    private boolean logado;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -131,7 +131,7 @@ public class Cliente {
         this.cpf = cpf;
     }
 
-    public boolean isLogado() {
+    public boolean getLogado() {
         return logado;
     }
 

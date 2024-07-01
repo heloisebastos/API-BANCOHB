@@ -51,7 +51,6 @@ public class ClienteController {
         } catch (ClienteException.CadastroDuplicadoException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
         }
-
     }
 
     @DeleteMapping("/{id}/deletar-cadastro")
@@ -61,10 +60,12 @@ public class ClienteController {
     }
 
     @PatchMapping("/{id}/atualizar-cadastro")
-    public ResponseEntity<Object> patch(@PathVariable UUID id, @RequestBody Map<String, String> requestBody)
+    public ResponseEntity<Object> atualizarCadastro(@PathVariable UUID id,
+            @RequestBody Map<String, String> requestBody)
             throws IllegalAccessException {
         try {
-            Cliente clienteAtualizado = clienteService.patch(id, requestBody);
+            Cliente clienteAtualizado = clienteService.atualizarCadastro(id,
+                    requestBody);
             return ResponseEntity.ok(clienteAtualizado);
         } catch (ClienteException.CadastroNaoEncontradoException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
@@ -74,6 +75,18 @@ public class ClienteController {
         } catch (Exception exception) {
             log.error("Erro ao atualizar o cadastro", exception);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PatchMapping("/{id}/logar")
+    public ResponseEntity<Object> autenticar(@PathVariable UUID id, @RequestBody Cliente clienteBody) {
+        try {
+            Cliente logarCliente = clienteService.logarCliente(id, clienteBody);
+            return ResponseEntity.ok(logarCliente);
+        } catch (Exception exception) {
+            log.error("Erro ao ao logar, dados de login incorreto", exception);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
     }
