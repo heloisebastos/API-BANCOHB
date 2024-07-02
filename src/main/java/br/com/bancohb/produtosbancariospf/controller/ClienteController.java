@@ -36,7 +36,6 @@ public class ClienteController {
             List<Cliente> cliente = clienteRepository.findAll();
             return ResponseEntity.ok(cliente);
         } catch (Exception e) {
-            log.error("Erro ao buscar os clientes");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -44,6 +43,7 @@ public class ClienteController {
 
     @PostMapping("/cadastrar-cliente")
     public ResponseEntity<Object> create(@RequestBody Cliente clienteBody) {
+
         try {
             Cliente cliente = clienteService.cadastrarCliente(clienteBody);
             return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
@@ -63,17 +63,18 @@ public class ClienteController {
     public ResponseEntity<Object> atualizarCadastro(@PathVariable UUID id,
             @RequestBody Map<String, String> requestBody)
             throws IllegalAccessException {
+
         try {
             Cliente clienteAtualizado = clienteService.atualizarCadastro(id,
                     requestBody);
             return ResponseEntity.ok(clienteAtualizado);
         } catch (ClienteException.CadastroNaoEncontradoException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ClienteException.ClinteNaoEstaLogadoException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (IllegalAccessException e) {
-            log.error("Erro de acesso ilegal ao atualizar cadastro: ", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {
-            log.error("Erro ao atualizar o cadastro", exception);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -84,8 +85,17 @@ public class ClienteController {
         try {
             Cliente logarCliente = clienteService.logarCliente(id, clienteBody);
             return ResponseEntity.ok(logarCliente);
+        } catch (ClienteException.ClinteNaoEstaLogadoException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PatchMapping("/{id}/deslogar")
+    public ResponseEntity<Object> deslogar(@PathVariable UUID id) {
+        try {
+            Cliente logarCliente = clienteService.deslogarCliente(id);
+            return ResponseEntity.ok(logarCliente);
         } catch (Exception exception) {
-            log.error("Erro ao ao logar, dados de login incorreto", exception);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 

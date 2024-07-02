@@ -42,13 +42,14 @@ public class ClienteService {
     public Cliente atualizarCadastro(UUID id, Map<String, String> requestBody) throws IllegalAccessException {
         Cliente cliente = clienteRepository.findById(id).orElseThrow(
                 () -> new ClienteException.CadastroNaoEncontradoException(id));
-        log.info("entrou no service");
+
+        if (!cliente.getLogado()) {
+            throw new ClienteException.ClinteNaoEstaLogadoException();
+        }
         // lista dos campos da minha model
         List<Field> camposDaModel = List.of(cliente.getClass().getDeclaredFields());
-        log.info("deu certo listar os campos no service");
 
         for (Field campo : camposDaModel) {
-            log.info("entrou no for do service");
 
             // tirando o privado
             campo.setAccessible(true);
@@ -80,6 +81,18 @@ public class ClienteService {
         }
 
         cliente.setLogado(true);
+        return clienteRepository.save(cliente);
+    }
+
+    public Cliente deslogarCliente(UUID id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ClienteException.CadastroNaoEncontradoException(id));
+
+        if (!cliente.getLogado()) {
+            throw new ClienteException.ClinteNaoEstaLogadoException();
+        }
+
+        cliente.setLogado(false);
         return clienteRepository.save(cliente);
     }
 

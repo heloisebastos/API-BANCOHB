@@ -25,4 +25,11 @@ public class ClienteException extends RuntimeException {
         }
     }
 
+    public static class ClinteNaoEstaLogadoException extends ClienteException {
+        public ClinteNaoEstaLogadoException() {
+            super("Cliente nao esta logado");
+
+        }
+    }
+
 }
